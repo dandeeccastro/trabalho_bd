@@ -8,6 +8,13 @@
           <myChart v-if='loaded' :chartdata='atendimentosChartData'></myChart>
         </v-card>
       </v-col>
+      <v-col>
+        <v-card>
+          <v-card-title> Desistências por Clinicas </v-card-title>
+          <v-pagination v-model='aten_des_pg' :length='aten_des_pgs'></v-pagination>
+          <myChart v-if='loaded' :chartdata='desistenciasChartData'></myChart>
+        </v-card>
+      </v-col>
     </v-row>
   </v-container>
 </template>
@@ -45,6 +52,10 @@ export default {
       aten_cli: null,
       aten_cli_pg: 1,
       aten_cli_pgs: 0,
+
+      aten_des: null,
+      aten_des_pg: 1,
+      aten_des_pgs: 0,
     }
   },
 
@@ -59,6 +70,13 @@ export default {
       const data = this.aten_cli.map( data => { return data.quant }).slice(i,j)
       return { labels:labels, datasets:[{ label: "Pelamordedeus", data:data }] } 
     },
+    desistenciasChartData: function() {
+      const i = ( this.aten_des_pg - 1 ) * this.data_by_chart;
+      const j = i + this.data_by_chart;
+      const labels = this.aten_des.map( data => { return data.name }).slice(i,j)
+      const data = this.aten_des.map( data => { return data.quant }).slice(i,j)
+      return { labels:labels, datasets:[{ label: "Pelamordedeus", data:data }] } 
+    },
   },
 
   async mounted() {
@@ -71,6 +89,19 @@ export default {
       // Pra paginação, precisamos saber qual o número total de páginas que vai ter 
       this.aten_cli_pgs = Math.floor( this.aten_cli.length / this.data_by_chart );
     });
+
+    await axios.get("./clinicas/desistencia").then( response => {
+      this.aten_des = response.data.clinicas.map( data => {
+        return { name: data.clinica, quant: data.desistencias }
+      });
+      // Pra paginação, precisamos saber qual o número total de páginas que vai ter 
+      this.aten_des_pgs = Math.floor( this.aten_des.length / this.data_by_chart );
+    });
+
+    await axios.get("./clinicas/altas_obitos").then( response => {
+      console.log( response.data ) 
+    });
+
 
     // Seto loaded = true e todos os componentes "problemáticos" carregam
     this.loaded = true;

@@ -69,9 +69,33 @@ export default {
       });
     });
 
+    await axios.get("./exames/clinica").then( response => this.exClinParse(response.data.pacientes) );
+
+    await axios.get("./exames/paciente_idoso").then( response => {
+      console.log ( response.data ) 
+    });
+
+    await axios.get("./exames/municipio").then( response => {
+      console.log ( response.data ) 
+    });
+
+    /*
+    await axios.get("./exames/avg_nasc").then( response => {
+      console.log ( response.data ) 
+    });
+    */
 
     // Seto loaded = true e todos os componentes "problemáticos" carregam
     this.loaded = true;
+  },
+
+  methods: {
+    exClinParse: function( data ) {
+      console.log( data ) 
+      const clinicas = data.map( d => d.clinica ).filter((value, index, self) => self.indexOf(value) === index);
+      const exames = data.map( d => d.nome_exame ).filter((value, index, self) => self.indexOf(value) === index);
+      console.log(clinicas.length, exames.length)
+    }
   }
 
 }

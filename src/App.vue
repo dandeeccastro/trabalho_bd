@@ -1,6 +1,5 @@
 <template>
   <v-app>
-    <v-navigation-drawer app></v-navigation-drawer>
     <v-app-bar app> 
       <v-toolbar-title>
         Análise dos Casos do Hospital Sírio Libanês 

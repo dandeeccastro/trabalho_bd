@@ -68,6 +68,12 @@ export default {
         return { name: data.desfecho, quant: data.quantidade }
       });
     });
+    await axios.get("./desfechos/municipio").then( response => {
+      console.log( response.data ) 
+    });
+    await axios.get("./desfechos/idade").then( response => {
+      console.log( response.data ) 
+    });
 
     // Seto loaded = true e todos os componentes "problemáticos" carregam
     this.loaded = true;
