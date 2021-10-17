@@ -1,23 +1,33 @@
 <template>
   <v-container>
+    <h1> Sobre o que você deseja ver hoje? </h1>
     <v-row>
-
       <v-col>
         <v-card>
-          <v-card-title> Exames Feitos </v-card-title>
-          <v-data-table v-if='loaded' :headers='headers' :items='exames' :search='search'>
-            <template v-slot:top>
-              <v-text-field v-model='search' label='Pesquisar' class='mx-4'></v-text-field>
-            </template>
-          </v-data-table>
+          <v-card-title>
+            <router-link to="/exames"> Exames </router-link>
+          </v-card-title>
         </v-card>
       </v-col>
-
       <v-col>
         <v-card>
-          <v-card-title> Atendimentos por Clinicas </v-card-title>
-          <v-pagination v-model='aten_cli_pg' :length='aten_cli_pgs'></v-pagination>
-          <myChart v-if='loaded' :chartdata='atendimentosChartData'></myChart>
+          <v-card-title>
+            <router-link to="/clinicas"> Clinicas </router-link>
+          </v-card-title>
+        </v-card>
+      </v-col>
+      <v-col>
+        <v-card>
+          <v-card-title>
+            <router-link to="/desfechos"> Desfechos </router-link>
+          </v-card-title>
+        </v-card>
+      </v-col>
+      <v-col>
+        <v-card>
+          <v-card-title>
+            <router-link to="/pacientes"> Pacientes </router-link>
+          </v-card-title>
         </v-card>
       </v-col>
 
@@ -26,78 +36,23 @@
 </template>
 
 <script>
-// @ is an alias to /src
-import axios from 'axios'
-import myChart from "@/components/MyChart.js"
 
 export default {
   name: 'Home',
 
   components: {
-    myChart,
   },
 
   data () {
 
     return {
-      loaded: false, 
-      data_by_chart: 10,
-
-      search: '',
-      headers: [
-        {
-          text: "Exames",
-          value: "name"
-        },
-        {
-          text: "Quantidade",
-          value: "quant"
-        },
-      ],
-
-      exames: null,
-
-      aten_cli: null,
-      aten_cli_pg: 1,
-      aten_cli_pgs: 0,
     }
   },
 
   computed: {
-    // Isso retorna os dados no formato necessário para o chart.js entender
-    // Recomendo copiar e colar, porque é meio chato refatorar isso pra não depender 
-    // dos dados da API 
-    atendimentosChartData: function() {
-      const i = ( this.aten_cli_pg - 1 ) * this.data_by_chart;
-      const j = i + this.data_by_chart;
-      const labels = this.aten_cli.map( data => { return data.name }).slice(i,j)
-      const data = this.aten_cli.map( data => { return data.quant }).slice(i,j)
-      console.log(labels, data)
-      return { labels:labels, datasets:[{ label: "Pelamordedeus", data:data }] } 
-    },
   },
 
   async mounted() {
-
-    // Pra componentes que usam v-data-table, esse map pega eles e bota num formato bom
-    await axios.get("./exames").then( response => {
-      this.exames = response.data.exames.map( data => {
-        return { name: data.exame, quant: data.quantidade }
-      });
-    });
-
-    // Pra componentes que não usam v-data-table, como os do chart.js, eu deixo no formato
-    // do v-data-table e mudo eles via métodos do computed
-    await axios.get("./clinicas/atendimento").then( response => {
-      this.aten_cli = response.data.clinicas.map( data => {
-        return { name: data.clinica, quant: data.atendimentos }
-      });
-      // Pra paginação, precisamos saber qual o número total de páginas que vai ter 
-      this.aten_cli_pgs = Math.floor( this.aten_cli.length / this.data_by_chart );
-    });
-
-    // Seto loaded = true e todos os componentes "problemáticos" carregam
-    this.loaded = true;
   }
 
 }
