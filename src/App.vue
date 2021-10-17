@@ -1,11 +1,17 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
-  </div>
+  <v-app>
+    <v-navigation-drawer app></v-navigation-drawer>
+    <v-app-bar app> 
+      <v-toolbar-title>
+        Análise dos Casos do Hospital Sírio Libanês 
+      </v-toolbar-title>
+    </v-app-bar>
+    <v-main>
+      <v-container>
+        <router-view/>
+      </v-container>
+    </v-main>
+  </v-app>
 </template>
 
 <style lang="scss">
