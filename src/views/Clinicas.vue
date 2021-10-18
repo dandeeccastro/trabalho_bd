@@ -104,14 +104,50 @@ export default {
       const j = i + this.data_by_chart;
       const labels = this.aten_cli.map( data => { return data.name }).slice(i,j)
       const data = this.aten_cli.map( data => { return data.quant }).slice(i,j)
-      return { labels:labels, datasets:[{ label: "Quantidade", data:data }] } 
+      return { 
+        labels:labels, 
+        datasets:[{ 
+          label: "Quantidade", 
+          data:data,
+          backgroundColor: [
+            '#DDD',
+            '#1ae',
+            '#3ca',
+            '#DDD',
+            '#f19',
+            '#abc',
+            '#129',
+            '#654',
+            '#321',
+            '#0d3',
+          ],
+        }] 
+      } 
     },
     desistenciasChartData: function() {
       const i = ( this.aten_des_pg - 1 ) * this.data_by_chart;
       const j = i + this.data_by_chart;
       const labels = this.aten_des.map( data => { return data.name }).slice(i,j)
       const data = this.aten_des.map( data => { return data.quant }).slice(i,j)
-      return { labels:labels, datasets:[{ label: "Quantidade", data:data }] } 
+      return { 
+        labels:labels, 
+        datasets:[{ 
+          label: "Quantidade", 
+          data:data, 
+          backgroundColor: [
+            '#DDD',
+            '#1ae',
+            '#3ca',
+            '#DDD',
+            '#f19',
+            '#abc',
+            '#129',
+            '#654',
+            '#321',
+            '#0d3',
+          ],
+        }] 
+      } 
     },
   },
 
