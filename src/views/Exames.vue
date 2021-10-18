@@ -27,7 +27,7 @@
       </v-col>
       <v-col>
         <v-card>
-          <v-card-title> Exames Aplicados por Munincípio </v-card-title>
+          <v-card-title> Exames Aplicados por Município </v-card-title>
           <myChart v-if='loaded' :chartdata='exs_mun_g'></myChart>
         </v-card>
       </v-col>
@@ -35,28 +35,44 @@
     <v-row>
       <v-col>
         <v-card>
-          <v-card-title> Todos os Exames Aplicados por Clínica </v-card-title>
-          <v-data-table v-if='loaded' :headers='exs_mun_h' :items='exs_mun'></v-data-table>
+          <v-card-title> Todos os Exames Aplicados por Município </v-card-title>
+          <v-data-table v-if='loaded' :headers='exs_mun_h' :items='exs_mun' :search='exs_mun_s'>
+            <template v-slot:top>
+              <v-text-field v-model='exs_mun_s' label='Pesquisar' class='mx-4'></v-text-field>
+            </template>
+          </v-data-table>
         </v-card>
       </v-col>
       <v-col>
         <v-card>
-          <v-card-title> Exames Aplicados por Idade ( Média )  </v-card-title>
-          <v-data-table v-if='loaded' :headers='nasc_headers' :items='exs_nasc'></v-data-table>
+          <v-card-title> Todos os Exames Aplicados por Idade ( Média )  </v-card-title>
+          <v-data-table v-if='loaded' :headers='nasc_headers' :items='exs_nasc' :search='exs_nasc_s'>
+            <template v-slot:top>
+              <v-text-field v-model='exs_nasc_s' label='Pesquisar' class='mx-4'></v-text-field>
+            </template>
+          </v-data-table>
         </v-card>
       </v-col>
     </v-row>
     <v-row>
       <v-col>
         <v-card>
-          <v-card-title> Todos os Exames Aplicados por Clínica </v-card-title>
-          <v-data-table v-if='loaded' :headers='exs_pac_id_h' :items='exs_pac_id'></v-data-table>
+          <v-card-title> Todos os Exames Aplicados em Idosos </v-card-title>
+          <v-data-table v-if='loaded' :headers='exs_pac_id_h' :items='exs_pac_id' :search='exs_pac_id_s'>
+            <template v-slot:top>
+              <v-text-field v-model='exs_pac_id_s' label='Pesquisar' class='mx-4'></v-text-field>
+            </template>
+          </v-data-table>
         </v-card>
       </v-col>
       <v-col>
         <v-card>
-          <v-card-title> Exames Aplicados por Idade ( Média )  </v-card-title>
-          <v-data-table v-if='loaded' :headers='exs_mun_h' :items='exs_mun'></v-data-table>
+          <v-card-title> Todos os Exames Aplicados por Clínica  </v-card-title>
+          <v-data-table v-if='loaded' :headers='exs_clin_h' :items='exs_clin' :search='exs_clin_s'>
+            <template v-slot:top>
+              <v-text-field v-model='exs_clin_s' label='Pesquisar' class='mx-4'></v-text-field>
+            </template>
+          </v-data-table>
         </v-card>
       </v-col>
     </v-row>
@@ -99,52 +115,55 @@ export default {
       exs_clin_g: null,
       exs_clin_h: [
         {
-          text: 'Teste',
+          text: 'Clínica',
           value: 'name',
         },
         {
-          text: 'Tesat2',
+          text: 'Exame',
           value: 'exame'
         },
         {
-          text: 'Tesat2',
+          text: 'Quantidade',
           value: 'quant'
         }
       ],
+      exs_clin_s: '',
 
       exs_pac_id: null,
       exs_pac_id_g: null,
       exs_pac_id_h: [
         {
-          text: 'Teste',
+          text: 'Exame',
           value: 'name',
         },
         {
-          text: 'Tesat2',
+          text: 'Data',
           value: 'dia'
         },
         {
-          text: 'Tesat2',
+          text: 'Quantidade',
           value: 'quant'
         }
       ],
+      exs_pac_id_s: '',
 
       exs_mun: null,
       exs_mun_g: null,
       exs_mun_h: [
         {
-          text: 'Teste',
+          text: 'Exame',
           value: 'name',
         },
         {
-          text: 'Tesat2',
+          text: 'Município',
           value: 'mun'
         },
         {
-          text: 'Tesat2',
+          text: 'Quantidade',
           value: 'quant'
         }
       ],
+      exs_mun_s: '',
 
       exs_nasc: null,
       nasc_headers: [
@@ -157,6 +176,7 @@ export default {
           value: 'idade'
         },
       ],
+      exs_nasc_s: '',
 
       exs_clin_pg: 1,
       exs_clin_pgs: 0,

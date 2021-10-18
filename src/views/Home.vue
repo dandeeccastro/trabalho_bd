@@ -1,6 +1,16 @@
 <template>
   <v-container>
-    <h1> Sobre o que você deseja ver hoje? </h1>
+    <v-row>
+      <v-col>
+    <v-card class='pa-4 ma-4'>
+      <v-card-title> Informações Importantes </v-card-title>
+    <ul>
+      <li> Os IDs são anonimizados para manter a privacidade das pessoas atendidas pelo Hospital Sírio Libanês. Por isso temos dois IDs: um hexadecimal e outro decimal </li>
+      <li> O município que consta como MMMM é equivalente ao NULL, ou seja, um município não registrado </li>
+    </ul>
+    </v-card>
+      </v-col>
+    </v-row>
     <v-row>
       <v-col>
         <v-card>

@@ -5,7 +5,7 @@
       <v-col>
         <v-card>
           <v-card-title> Desfechos </v-card-title>
-          <myPieChart v-if='loaded' :chartdata='desfechosChartData'></myPieChart>
+          <myPieChart v-if='loaded' :chartdata='desf'></myPieChart>
         </v-card>
       </v-col>
 
@@ -28,8 +28,12 @@
 
       <v-col>
         <v-card>
-          <v-card-title> Desfechos por Idade </v-card-title>
-          <v-data-table v-if='loaded' :headers='des_id_h' :items='des_id'></v-data-table>
+          <v-card-title> Todos os Desfechos por Idade </v-card-title>
+          <v-data-table v-if='loaded' :headers='des_id_h' :items='des_id' :search='des_id_s'>
+            <template v-slot:top>
+              <v-text-field v-model='des_id_s' label='Pesquisar' class='mx-4'></v-text-field>
+            </template>
+          </v-data-table>
         </v-card>
       </v-col>
 
@@ -38,8 +42,12 @@
 
       <v-col>
         <v-card>
-          <v-card-title> Desfechos por Idade </v-card-title>
-          <v-data-table v-if='loaded' :headers='des_mun_h' :items='des_mun'></v-data-table>
+          <v-card-title> Todos os Desfechos por Município </v-card-title>
+          <v-data-table v-if='loaded' :headers='des_mun_h' :items='des_mun' :search='des_mun_s'>
+            <template v-slot:top>
+              <v-text-field v-model='des_mun_s' label='Pesquisar' class='mx-4'></v-text-field>
+            </template>
+          </v-data-table>
         </v-card>
       </v-col>
 
@@ -95,14 +103,15 @@ export default {
           value: 'name'
         },
         {
-          text: 'asdfi',
+          text: 'Município',
           value: 'mun'
         },
         {
-          text: 'asdklfj',
+          text: 'Quantidade',
           value: 'quant'
         }
       ],
+      des_mun_s: '',
 
       des_id_g: null,
       des_id: null,
@@ -112,32 +121,25 @@ export default {
           value: 'name'
         },
         {
-          text: 'asdfi',
+          text: 'Idade',
           value: 'idade'
         },
         {
-          text: 'asdklfj',
+          text: 'Quantidade',
           value: 'quant'
         }
       ],
+      des_id_s: '',
     }
   },
 
   computed: {
-    desfechosChartData: function() {
-      const labels = this.desf.map( data => { return data.name })
-      const data = this.desf.map( data => { return data.quant })
-      console.log ({ labels:labels, datasets:[{  data:data }] } )
-      return { labels:labels, datasets:[{  data:data }] } 
-    },
   },
 
   async mounted() {
 
     await axios.get("./desfechos").then( response => {
-      this.desf = response.data.desfechos.map( data => {
-        return { name: data.desfecho, quant: data.quantidade }
-      });
+      this.desf = response.data.graphics;
     });
     await axios.get("./desfechos/municipio").then( response => {
       this.des_mun_g = response.data.graphics 

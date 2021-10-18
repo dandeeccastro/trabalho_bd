@@ -4,6 +4,8 @@
       <v-toolbar-title>
         Análise dos Casos do Hospital Sírio Libanês 
       </v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-icon @click='$router.back()'>mdi-arrow-left</v-icon>
     </v-app-bar>
     <v-main>
       <v-container>

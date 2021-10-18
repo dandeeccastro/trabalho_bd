@@ -26,7 +26,11 @@
       <v-col>
         <v-card>
           <v-card-title> Altas e Óbitos por Clínicas </v-card-title>
-          <v-data-table v-if='loaded' :headers='cli_alt_ob_h' :items='cli_alt_ob'></v-data-table>
+          <v-data-table v-if='loaded' :headers='cli_alt_ob_h' :items='cli_alt_ob' :search='cli_alt_ob_s'>
+            <template v-slot:top>
+              <v-text-field v-model='cli_alt_ob_s' label='Pesquisar' class='mx-4'></v-text-field>
+            </template>
+          </v-data-table>
         </v-card>
       </v-col>
     </v-row>
@@ -87,6 +91,7 @@ export default {
           value: 'quant'
         }
       ],
+      cli_alt_ob_s: '',
     }
   },
 
@@ -99,14 +104,14 @@ export default {
       const j = i + this.data_by_chart;
       const labels = this.aten_cli.map( data => { return data.name }).slice(i,j)
       const data = this.aten_cli.map( data => { return data.quant }).slice(i,j)
-      return { labels:labels, datasets:[{ label: "Pelamordedeus", data:data }] } 
+      return { labels:labels, datasets:[{ label: "Quantidade", data:data }] } 
     },
     desistenciasChartData: function() {
       const i = ( this.aten_des_pg - 1 ) * this.data_by_chart;
       const j = i + this.data_by_chart;
       const labels = this.aten_des.map( data => { return data.name }).slice(i,j)
       const data = this.aten_des.map( data => { return data.quant }).slice(i,j)
-      return { labels:labels, datasets:[{ label: "Pelamordedeus", data:data }] } 
+      return { labels:labels, datasets:[{ label: "Quantidade", data:data }] } 
     },
   },
 
