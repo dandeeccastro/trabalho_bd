@@ -11,6 +11,54 @@
           </v-data-table>
         </v-card>
       </v-col>
+      <v-col>
+        <v-card>
+          <v-card-title> Exames Aplicados por Clínica </v-card-title>
+          <myChart v-if='loaded' :chartdata='exs_clin_g'></myChart>
+        </v-card>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col>
+        <v-card>
+          <v-card-title> Exames Aplicados em Idosos </v-card-title>
+          <myChart v-if='loaded' :chartdata='exs_pac_id_g'></myChart>
+        </v-card>
+      </v-col>
+      <v-col>
+        <v-card>
+          <v-card-title> Exames Aplicados por Munincípio </v-card-title>
+          <myChart v-if='loaded' :chartdata='exs_mun_g'></myChart>
+        </v-card>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col>
+        <v-card>
+          <v-card-title> Todos os Exames Aplicados por Clínica </v-card-title>
+          <v-data-table v-if='loaded' :headers='exs_mun_h' :items='exs_mun'></v-data-table>
+        </v-card>
+      </v-col>
+      <v-col>
+        <v-card>
+          <v-card-title> Exames Aplicados por Idade ( Média )  </v-card-title>
+          <v-data-table v-if='loaded' :headers='nasc_headers' :items='exs_nasc'></v-data-table>
+        </v-card>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col>
+        <v-card>
+          <v-card-title> Todos os Exames Aplicados por Clínica </v-card-title>
+          <v-data-table v-if='loaded' :headers='exs_pac_id_h' :items='exs_pac_id'></v-data-table>
+        </v-card>
+      </v-col>
+      <v-col>
+        <v-card>
+          <v-card-title> Exames Aplicados por Idade ( Média )  </v-card-title>
+          <v-data-table v-if='loaded' :headers='exs_mun_h' :items='exs_mun'></v-data-table>
+        </v-card>
+      </v-col>
     </v-row>
   </v-container>
 </template>
@@ -18,18 +66,20 @@
 <script>
 // @ is an alias to /src
 import axios from 'axios'
+import myChart from '@/components/MyChart.js'
 
 export default {
   name: 'Exames',
 
   components: {
+    myChart,
   },
 
   data () {
 
     return {
       loaded: false, 
-      data_by_chart: 10,
+      data_by_chart: 4,
 
       search: '',
       headers: [
@@ -44,6 +94,72 @@ export default {
       ],
       
       exames: null,
+
+      exs_clin: null,
+      exs_clin_g: null,
+      exs_clin_h: [
+        {
+          text: 'Teste',
+          value: 'name',
+        },
+        {
+          text: 'Tesat2',
+          value: 'exame'
+        },
+        {
+          text: 'Tesat2',
+          value: 'quant'
+        }
+      ],
+
+      exs_pac_id: null,
+      exs_pac_id_g: null,
+      exs_pac_id_h: [
+        {
+          text: 'Teste',
+          value: 'name',
+        },
+        {
+          text: 'Tesat2',
+          value: 'dia'
+        },
+        {
+          text: 'Tesat2',
+          value: 'quant'
+        }
+      ],
+
+      exs_mun: null,
+      exs_mun_g: null,
+      exs_mun_h: [
+        {
+          text: 'Teste',
+          value: 'name',
+        },
+        {
+          text: 'Tesat2',
+          value: 'mun'
+        },
+        {
+          text: 'Tesat2',
+          value: 'quant'
+        }
+      ],
+
+      exs_nasc: null,
+      nasc_headers: [
+        {
+          text: 'Exame',
+          value: 'name'
+        },
+        {
+          text: 'Ano de Nascimento',
+          value: 'idade'
+        },
+      ],
+
+      exs_clin_pg: 1,
+      exs_clin_pgs: 0,
     }
   },
 
@@ -69,21 +185,35 @@ export default {
       });
     });
 
-    await axios.get("./exames/clinica").then( response => this.exClinParse(response.data.pacientes) );
+    await axios.get("./exames/clinica").then( response => { 
+      console.log(response.data)
+      this.exs_clin_g = response.data.graphics 
+      this.exs_clin = response.data.clinicas.map( data => { 
+        return { name:data.clinica, exame:data.nome_exame, quant:data.quantidade }
+      });
+    });
 
     await axios.get("./exames/paciente_idoso").then( response => {
-      console.log ( response.data ) 
+      console.log(response.data)
+      this.exs_pac_id_g = response.data.graphics 
+      this.exs_pac_id = response.data.exames.map( data => {
+        return { name: data.exame, dia: data.dia_atendimento, quant: data.quantidade }
+      })
     });
 
     await axios.get("./exames/municipio").then( response => {
-      console.log ( response.data ) 
+      console.log(response.data)
+      this.exs_mun_g = response.data.graphics 
+      this.exs_mun = response.data.exames.map( data => {
+        return { name: data.exame, mun: data.municipio, quant: data.quantidade } 
+      })
     });
 
-    /*
     await axios.get("./exames/avg_nasc").then( response => {
-      console.log ( response.data ) 
+      this.exs_nasc = response.data.exams.map( data => {
+        return { name: data.exame, idade: data.media_idade }
+      })
     });
-    */
 
     // Seto loaded = true e todos os componentes "problemáticos" carregam
     this.loaded = true;
@@ -92,9 +222,11 @@ export default {
   methods: {
     exClinParse: function( data ) {
       console.log( data ) 
+      /*
       const clinicas = data.map( d => d.clinica ).filter((value, index, self) => self.indexOf(value) === index);
       const exames = data.map( d => d.nome_exame ).filter((value, index, self) => self.indexOf(value) === index);
       console.log(clinicas.length, exames.length)
+      */
     }
   }
 

@@ -16,6 +16,20 @@
         </v-card>
       </v-col>
     </v-row>
+    <v-row>
+      <v-col>
+        <v-card>
+          <v-card-title> Altas e Óbitos por Clínicas </v-card-title>
+          <myChart v-if='loaded' :chartdata='cli_alt_ob_g'></myChart>
+        </v-card>
+      </v-col>
+      <v-col>
+        <v-card>
+          <v-card-title> Altas e Óbitos por Clínicas </v-card-title>
+          <v-data-table v-if='loaded' :headers='cli_alt_ob_h' :items='cli_alt_ob'></v-data-table>
+        </v-card>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 <style></style>
@@ -56,6 +70,23 @@ export default {
       aten_des: null,
       aten_des_pg: 1,
       aten_des_pgs: 0,
+
+      cli_alt_ob: null,
+      cli_alt_ob_g: null,
+      cli_alt_ob_h: [
+        {
+          text: 'Clinica',
+          value: 'name',
+        },
+        {
+          text: 'Desfecho',
+          value: 'desfecho'
+        },
+        {
+          text: 'Quantidade',
+          value: 'quant'
+        }
+      ],
     }
   },
 
@@ -99,7 +130,11 @@ export default {
     });
 
     await axios.get("./clinicas/altas_obitos").then( response => {
-      console.log( response.data ) 
+      console.log(response.data)
+      this.cli_alt_ob_g = response.data.graphics;
+      this.cli_alt_ob = response.data.clinicas.map( data => {
+        return { name: data.clinica, desfecho: data.desfecho, quant: data.quantidade } 
+      });
     });
 
 
